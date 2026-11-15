@@ -1,0 +1,17 @@
+@model TableView3D.Models.Reservation
+@{
+    ViewData["Title"] = "Reservation confirmed";
+}
+
+<h1>Reservation confirmed</h1>
+
+<div class="card">
+    <div class="card-body">
+        <p class="fs-4">Reference: <strong>@Model.ReferenceCode</strong></p>
+        <p class="mb-1">Table @Model.RestaurantTable?.Number (@Model.RestaurantTable?.Location)</p>
+        <p class="mb-1">@Model.Date.ToString("ddd, MMM d, yyyy"), @Model.StartTime.ToString("h:mm tt") to @Model.EndTime.ToString("h:mm tt")</p>
+        <p class="mb-0">@Model.PartySize guests · @Model.GuestName</p>
+    </div>
+</div>
+
+<a asp-action="Search" class="btn btn-warning mt-3">Book another table</a>

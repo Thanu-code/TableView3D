@@ -1,0 +1,44 @@
+@model TableView3D.Models.BookingViewModel
+@{
+    ViewData["Title"] = "Confirm reservation";
+}
+
+<h1>Confirm your reservation</h1>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p class="mb-1"><strong>Table @Model.TableNumber</strong> · @Model.Location · seats @Model.Seats</p>
+        <p class="mb-0">@Model.Date.ToString("ddd, MMM d, yyyy") at @Model.Time.ToString("h:mm tt") · @Model.PartySize guests</p>
+    </div>
+</div>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <input type="hidden" name="TableId" value="@Model.TableId" />
+    <input type="hidden" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" />
+    <input type="hidden" name="Time" value="@Model.Time.ToString("HH:mm")" />
+    <input type="hidden" name="PartySize" value="@Model.PartySize" />
+
+    <div class="mb-3">
+        <label asp-for="GuestName" class="form-label">Full name</label>
+        <input asp-for="GuestName" class="form-control" />
+        <span asp-validation-for="GuestName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="GuestPhone" class="form-label">Mobile number</label>
+        <input asp-for="GuestPhone" class="form-control" />
+        <span asp-validation-for="GuestPhone" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="SpecialRequests" class="form-label">Special requests (optional)</label>
+        <textarea asp-for="SpecialRequests" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="SpecialRequests" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-warning">Confirm reservation</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

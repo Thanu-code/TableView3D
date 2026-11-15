@@ -1,0 +1,74 @@
+@model TableView3D.Models.SearchViewModel
+@{
+    ViewData["Title"] = "Find a table";
+}
+
+<h1>Find a table</h1>
+
+<form method="get" asp-action="Search" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label class="form-label">Date</label>
+        <input type="date" name="date" class="form-control"
+               value="@Model.Date.ToString("yyyy-MM-dd")"
+               min="@DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Time</label>
+        <select name="time" class="form-select">
+            @for (var t = new TimeOnly(17, 0); t <= new TimeOnly(21, 30); t = t.AddMinutes(30))
+            {
+                <option value="@t.ToString("HH:mm")" selected="@(t == Model.Time)">@t.ToString("h:mm tt")</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Guests</label>
+        <input type="number" name="partySize" min="1" max="12" class="form-control" value="@Model.PartySize" />
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-warning w-100">Find tables</button>
+    </div>
+</form>
+
+@if (Model.Results != null)
+{
+    <table class="table">
+        <thead>
+            <tr><th>Table</th><th>Seats</th><th>Location</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model.Results)
+            {
+                <tr>
+                    <td>@r.Table.Number</td>
+                    <td>@r.Table.Seats</td>
+                    <td>@r.Table.Location</td>
+                    <td>
+                        @if (r.IsAvailable)
+                        {
+                            <span class="badge bg-success">Available</span>
+                        }
+                        else if (r.IsBooked)
+                        {
+                            <span class="badge bg-danger">Booked</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Too small</span>
+                        }
+                    </td>
+                    <td>
+                        @if (r.IsAvailable)
+                        {
+                            <a class="btn btn-sm btn-warning" asp-action="Create"
+                               asp-route-tableId="@r.Table.Id"
+                               asp-route-date="@Model.Date.ToString("yyyy-MM-dd")"
+                               asp-route-time="@Model.Time.ToString("HH:mm")"
+                               asp-route-partySize="@Model.PartySize">Book</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
